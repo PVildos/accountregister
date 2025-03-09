@@ -1,9 +1,7 @@
 let currentProgress = 0;
-let inputText;
 document.addEventListener("DOMContentLoaded", () => {
     const registerButton = document.getElementById("registerButton");
     registerButton.addEventListener("click", createInputField);
-
 })
 
 function createInputField () {
@@ -51,10 +49,8 @@ function fieldType () {
 
 function inputType(fieldType) {
     switch (fieldType) {
-        case "username": 
-            return "text";
-        case "password": 
-            return "password";
+        case "username": return "text";
+        case "password": return "password";
         case "email": return "email";
     }
 }
@@ -64,10 +60,6 @@ function updateProgress () {
     
 }
 
-function capitalize (string) {
-    return string[0].toUpperCase()+string.slice(1);
-}
-
 function progressStatus () {
   const progressBar = document.getElementById("progressBar");
   progressBar.value = currentProgress;
@@ -75,39 +67,7 @@ function progressStatus () {
 }
 
 function newField () {
-   /* switch (currentProgress) {
-        case 1:
-            const inputText = document.getElementById(input);
-            inputText.type = "password";
-            const submitButton = document.getElementById("next");
-            submitButton.addEventListener("click", (event) => {
-                if (!passwordValidation(inputText)) {
-                    event.preventDefault();
-                    const registrationForm = document.getElementById("registForm");
-                    const passwordError = document.createElement("p");
-                    passwordError.style.color = "red";
-                    passwordError.innerText = "Invalid Email";
-                    registrationForm.appendChild(passwordError);
-                }
-            })
-            break;
-        case 2:
-            inputText = document.getElementById(input);
-            submitButton = document.getElementById("next");
-            submitButton.addEventListener("click", (event) => {
-                if (!emailValidation(inputText)) {
-                    event.preventDefault();
-                    const registrationForm = document.getElementById("registForm");
-                    const emailError = document.createElement("p");
-                    emailError.style.color = "red";
-                    emailError.innerText = "Invalid Email";
-                    registrationForm.appendChild(emailError);
-                }
-            })
-            break;
-        default:
-            break;
-    }*/
+   //TODO: Input Validation
     updateProgress();
     if (currentProgress === 3) {
         currentProgress = 0;
@@ -118,7 +78,7 @@ function newField () {
     createInputField();
 }
 
-function validationCheck (validationPattern) {
+function isValid (validationPattern) {
     let pattern = validationPattern(inputType,fieldType);
     return pattern.test(pattern);
 }
@@ -131,6 +91,11 @@ function validationPattern (inputType,fieldType) {
             return "/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i";    
     }
 }
+
+function capitalize (string) {
+    return string[0].toUpperCase()+string.slice(1);
+}
+
 /* 
 function showEmailValidationState(event) {
             if (validateEmail(event.target.value)) {
