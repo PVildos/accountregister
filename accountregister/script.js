@@ -1,6 +1,5 @@
 let currentProgress = 0;
-let pattern;
-let input;
+let inputText;
 document.addEventListener("DOMContentLoaded", () => {
     const registerButton = document.getElementById("registerButton");
     registerButton.addEventListener("click", createInputField);
@@ -9,25 +8,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function createInputField () {
     const registerButton = document.getElementById("registerButton");
-    registerButton.classList.add("disabled")
+    registerButton.classList.add("disabled");
     registerButton.removeEventListener("click", createInputField);
-    const progressBar = document.getElementById("progressBar");
+    const progressBar = document.querySelector(".progress");
     progressBar.style.visibility = "visible";
-    const registerSection = document.getElementById("registerSection");
-    let input = fieldType();
+    const mainSection = document.getElementById("mainSection");
+    let inputText = fieldType();
     const registrationForm = document.createElement("form");
+    registrationForm.classList.add("form");
     registrationForm.id = "registForm";
-    registerSection.appendChild(registrationForm);
-    const inputLabel = document.createElement("label");
-    inputLabel.innerText = capitalize(input) + ": ";
-    registrationForm.appendChild(inputLabel);
-    const inputField = document.createElement("input");
-    inputField.id = input;
+    mainSection.appendChild(registrationForm);
+    const inputField = document.createElement("section");
+    inputField.id = "input";
     registrationForm.appendChild(inputField);
+    const inputLabel = document.createElement("label");
+    inputLabel.innerText = capitalize(inputText) + ":\t";
+    inputLabel.style.marginRight = "5%";
+    inputField.appendChild(inputLabel);
+    const input = document.createElement("input");
+    input.id = inputText;
+    input.type = inputType(fieldType);
+    inputField.appendChild(input);
     inputLabel.addEventListener("click", () => {
-       document.getElementById(inputField.id).focus();
+       document.getElementById(input.id).focus();
     })
     const nextButton = document.createElement("button");
+    nextButton.classList.add("button");
     nextButton.innerText = "Submit";
     nextButton.id = "next";
     registrationForm.appendChild(nextButton);
@@ -35,7 +41,7 @@ function createInputField () {
 }
 
 function fieldType () {
-    let progress = progressStatus();
+    progress = progressStatus();
     switch (progress) {
         case 0: return "username";
         case 1: return "password";
@@ -43,6 +49,15 @@ function fieldType () {
     }
 }
 
+function inputType(fieldType) {
+    switch (fieldType) {
+        case "username": 
+            return "text";
+        case "password": 
+            return "password";
+        case "email": return "email";
+    }
+}
 function updateProgress () {
     currentProgress++;
     progressStatus ();
@@ -103,15 +118,19 @@ function newField () {
     createInputField();
 }
 
-function emailValidation (email) {
-    pattern = "/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i";
-    return pattern.test(email)
-}
-function passwordValidation (password) {
-    pattern = "^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/i";
-    return pattern.test(password);
+function validationCheck (validationPattern) {
+    let pattern = validationPattern(inputType,fieldType);
+    return pattern.test(pattern);
 }
 
+function validationPattern (inputType,fieldType) {
+    switch(inputType(fieldType)) {
+        case "password":
+            return "^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/i";
+        case "email":
+            return "/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i";    
+    }
+}
 /* 
 function showEmailValidationState(event) {
             if (validateEmail(event.target.value)) {
